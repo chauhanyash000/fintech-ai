@@ -1,0 +1,53 @@
+# Flask and related packages
+Flask==3.0.0
+Werkzeug==3.0.1
+
+# Data processing and analysis
+pandas==2.1.4
+numpy==1.26.2
+yfinance==0.2.35
+
+# PDF handling and document processing
+PyPDF2==3.0.1
+fpdf==1.7.2
+pdf2image==1.16.3
+pdfkit==1.0.0
+PyMuPDF==1.23.8
+reportlab==4.0.8
+
+# Web scraping and HTTP
+requests==2.31.0
+beautifulsoup4==4.12.2
+urllib3==2.1.0
+playwright==1.40.0
+
+# Image processing
+pytesseract==0.3.10
+Pillow==10.1.0
+
+# AI/ML
+openai==0.28
+
+# Google services
+google-api-python-client==2.114.0
+
+# Date/Time handling
+pytz==2023.3.post1
+
+# Retry and error handling
+tenacity==8.2.3
+
+# Frontend
+# Note: shadcn/ui components are imported directly from @/components/ui/
+# and don't require separate installation
+
+# Development and debugging
+python-dotenv==1.0.0
+
+# System utilities
+unicodedata2==15.1.0
+
+flask-cors==4.0.0
+google-cloud-storage
+google-cloud-firestore
+firebase-admin
