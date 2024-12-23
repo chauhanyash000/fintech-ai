@@ -5,16 +5,6 @@
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "function": "app"
-      }
     ]
-  },
-  "functions": {
-    "source": ".",
-    "runtime": "nodejs18"
   }
 }
