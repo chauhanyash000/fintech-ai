@@ -28,4 +28,8 @@ jobs:
         run: npm install -g firebase-tools
 
       - name: Deploy to Firebase
-        run: firebase deploy --only hosting --project ${{ secrets.PROJECT_ID }} --non-interactive
+        uses: w9jds/firebase-action@master
+        with:
+          args: deploy --only hosting
+        env:
+          PROJECT_ID: 'fintech-ai'
