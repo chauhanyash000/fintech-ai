@@ -171,150 +171,73 @@
 <script>
                 const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
                 
-                const form = document.getElementById('reportForm');
-                const paymentStatus = document.getElementById('paymentStatus');
-                const paymentStatusIcon = document.getElementById('paymentStatusIcon');
-                const paymentStatusText = document.getElementById('paymentStatusText');
-                const completePaymentBtn = document.getElementById('completePaymentBtn');
-                const generateBtn = document.getElementById('generateBtn');
-
-                let currentTicker = '';
-                let paymentCompleted = false;
-
-                const updatePaymentStatus = (status) => {
-                    paymentStatus.classList.remove('hidden');
-                    if (status === 'pending') {
-                        paymentStatusIcon.className = 'w-4 h-4 rounded-full mr-3 bg-yellow-500';
-                        paymentStatusText.textContent = 'Payment Pending';
-                        paymentStatusText.className = 'text-sm text-yellow-700';
-                        completePaymentBtn.classList.remove('hidden');
-                    } else if (status === 'completed') {
-                        paymentStatusIcon.className = 'w-4 h-4 rounded-full mr-3 bg-green-500';
-                        paymentStatusText.textContent = 'Payment Completed';
-                        paymentStatusText.className = 'text-sm text-green-700';
-                        completePaymentBtn.classList.add('hidden');
-                        generateBtn.classList.remove('cursor-not-allowed', 'opacity-50', 'bg-gray-400');
-                        generateBtn.classList.add('bg-blue-500', 'hover:bg-blue-600');
-                        generateBtn.disabled = false;
-                        paymentCompleted = true;
-                    }
-                };
-
-                completePaymentBtn.addEventListener('click', async () => {
-                    if (!currentTicker) return;
-                    
-                    try {
-                        const response = await fetch(`${BACKEND_URL}/create-payment`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({ ticker: currentTicker })
-                        });
-                        
-                        const data = await response.json();
-                        if (response.ok && data.paymentUrl) {
-                            window.open(data.paymentUrl, '_blank');
-                            checkPaymentStatus(currentTicker);
-                        } else {
-                            throw new Error(data.error || 'Failed to create payment');
-                        }
-                    } catch (error) {
-                        showError(error.message);
-                    }
-                });
-
-                form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                
-                const formData = new FormData(form);
-                currentTicker = formData.get('ticker').toUpperCase();
-                
-                try {
-                    // Show payment status immediately
-                    updatePaymentStatus('pending');
-                    
-                    const response = await fetch(`${BACKEND_URL}/create-payment`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({ 
-                            ticker: currentTicker,
-                            company_name: formData.get('company_name')
-                        })
-                    });
-                    
-                    const data = await response.json();
-                    if (response.ok && data.paymentUrl) {
-                        // Open payment URL in new tab
-                        window.open(data.paymentUrl, '_blank');
-                        // Start checking payment status
-                        pollPaymentStatus(currentTicker);
-                    } else {
-                        throw new Error(data.error || 'Failed to create payment');
-                    }
-                } catch (error) {
-                    showError(error.message);
-                }
-            });
+        const form = document.getElementById('reportForm');
+        const generateBtn = document.getElementById('generateBtn');
+        const progressSection = document.getElementById('progressSection');
+        const downloadSection = document.getElementById('downloadSection');
+        const errorSection = document.getElementById('errorSection');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusSpinner = document.getElementById('statusSpinner');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
             
-            const pollPaymentStatus = async (ticker) => {
-                try {
-                    while (true) {
-                        const response = await fetch(`${BACKEND_URL}/payment-status/${ticker}`);
-                        const data = await response.json();
-                        
-                        if (data.status === 'completed') {
-                            updatePaymentStatus('completed');
-                            break;
-                        } else if (data.status === 'failed') {
-                            throw new Error('Payment failed');
-                        }
-                        
-                        await new Promise(resolve => setTimeout(resolve, 2000));
-                    }
-                } catch (error) {
-                    showError(error.message);
+            const formData = new FormData(form);
+            const ticker = formData.get('ticker').toUpperCase();
+            
+            try {
+                generateBtn.disabled = true;
+                generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                
+                const response = await fetch(`${BACKEND_URL}/generate`, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.paymentUrl) {
+                    window.open(data.paymentUrl, '_blank');
+                    pollAnalysisStatus(ticker);
+                } else {
+                    throw new Error(data.error || 'Failed to start analysis');
                 }
-            };
-                        
-                // Poll for status
-                while (true) {
-                    const statusResponse = await fetch(`${BACKEND_URL}/status/${ticker}`);
-                    if (!statusResponse.ok) {
-                        throw new Error('Failed to get status update');
-                    }
-                    
-                    const statusData = await statusResponse.json();
-                    statusMessage.textContent = statusData.message;
-                    updateProgress(statusData.status);
-                    
-                    if (statusData.status === 'completed') {
-                        statusSpinner.classList.add('hidden');
-                        downloadSection.classList.remove('hidden');
-                        
-                        // Update download button to use the new download function
-                        downloadBtn.onclick = (e) => {
-                            e.preventDefault();
-                            downloadPDF(ticker);
-                        };
-                        break;
-                    } else if (statusData.status === 'failed') {
-                        throw new Error('Analysis generation failed. Please try again.');
-                    }
-                    
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                }
-            } catch (err) {
-                statusSpinner.classList.add('hidden');
-                errorSection.classList.remove('hidden');
-                errorMessage.textContent = err.message;
-            } finally {
+            } catch (error) {
+                showError(error.message);
                 generateBtn.disabled = false;
                 generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         });
+        
+        const pollAnalysisStatus = async (ticker) => {
+            progressSection.classList.remove('hidden');
+            statusSpinner.classList.remove('hidden');
+            
+            try {
+                while (true) {
+                    const response = await fetch(`${BACKEND_URL}/status/${ticker}`);
+                    const data = await response.json();
+                    
+                    statusMessage.textContent = data.message;
+                    updateProgress(data.status);
+                    
+                    if (data.status === 'completed') {
+                        statusSpinner.classList.add('hidden');
+                        downloadSection.classList.remove('hidden');
+                        break;
+                    } else if (data.status === 'failed') {
+                        throw new Error('Analysis failed');
+                    }
+                    
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                generateBtn.disabled = false;
+                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        };
     </script>
 </body>
 </html>
