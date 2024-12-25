@@ -225,49 +225,59 @@
                 });
 
                 form.addEventListener('submit', async (e) => {
-                    e.preventDefault();
-                    if (!paymentCompleted) {
-                        alert('Please complete the payment first');
-                        return;
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                currentTicker = formData.get('ticker').toUpperCase();
+                
+                try {
+                    // Show payment status immediately
+                    updatePaymentStatus('pending');
+                    
+                    const response = await fetch(`${BACKEND_URL}/create-payment`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ 
+                            ticker: currentTicker,
+                            company_name: formData.get('company_name')
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    if (response.ok && data.paymentUrl) {
+                        // Open payment URL in new tab
+                        window.open(data.paymentUrl, '_blank');
+                        // Start checking payment status
+                        pollPaymentStatus(currentTicker);
+                    } else {
+                        throw new Error(data.error || 'Failed to create payment');
                     }
-                    
-                    // Reset UI
-                    paymentSection.classList.add('hidden');
-                    progressSection.classList.add('hidden');
-                    downloadSection.classList.add('hidden');
-                    errorSection.classList.add('hidden');
-                    generateBtn.disabled = true;
-                    generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                    
-                    const formData = new FormData(form);
-                    currentTicker = formData.get('ticker').toUpperCase();
-                    
-                    try {
-                        // Initial generate request for payment
-                        const response = await fetch(`${BACKEND_URL}/generate`, {
-                            method: 'POST',
-                            body: formData
-                        });
-                        
+                } catch (error) {
+                    showError(error.message);
+                }
+            });
+            
+            const pollPaymentStatus = async (ticker) => {
+                try {
+                    while (true) {
+                        const response = await fetch(`${BACKEND_URL}/payment-status/${ticker}`);
                         const data = await response.json();
                         
-                        if (response.ok && data.status === 'payment_required') {
-                            // Show payment section
-                            paymentSection.classList.remove('hidden');
-                            paymentBtn.href = data.paymentUrl;
-                            paymentId = data.paymentId;
-                            
-                            // Start polling for payment status
-                            checkPaymentStatus(currentTicker);
-                        } else {
-                            throw new Error(data.error || 'Failed to start analysis');
+                        if (data.status === 'completed') {
+                            updatePaymentStatus('completed');
+                            break;
+                        } else if (data.status === 'failed') {
+                            throw new Error('Payment failed');
                         }
-                    } catch (error) {
-                        showError(error.message);
-                        generateBtn.disabled = false;
-                        generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        
+                        await new Promise(resolve => setTimeout(resolve, 2000));
                     }
-                });
+                } catch (error) {
+                    showError(error.message);
+                }
+            };
                         
                 // Poll for status
                 while (true) {
