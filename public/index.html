@@ -136,12 +136,43 @@
                     <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
                     <h3 class="text-lg font-semibold text-green-800 mb-2">Analysis Complete!</h3>
                     <p class="text-sm text-green-600 mb-4">Your comprehensive stock analysis report is ready.</p>
-                    <a id="downloadBtn" href="#" 
-                       class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 
-                              focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
-                        <i class="fas fa-download mr-2"></i>
-                        <span>Download Report</span>
-                    </a>
+                    <div class="text-sm text-gray-600 mb-4">
+                        <p>Price: $2.00</p>
+                    </div>
+                    <button id="payBtn" 
+                            class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 
+                                   focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
+                        <i class="fas fa-credit-card mr-2"></i>
+                        <span>Pay & Download</span>
+                    </button>
+                </div>
+            </div>
+
+             <!-- Payment Processing Modal -->
+            <div id="paymentModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+                <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                    <div class="mt-3 text-center">
+                        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                            <i class="fas fa-lock text-green-600"></i>
+                        </div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4">Payment Details</h3>
+                        <div class="mt-4">
+                            <form id="payment-form" class="space-y-4">
+                                <div id="card-element" class="p-3 border rounded-md">
+                                    <!-- Stripe Card Element will be inserted here -->
+                                </div>
+                                <div id="card-errors" class="text-red-500 text-sm" role="alert"></div>
+                                <button type="submit" 
+                                        class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-green-600 text-base font-medium text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 sm:text-sm">
+                                    Pay $2.00
+                                </button>
+                            </form>
+                            <button id="closePaymentModal" 
+                                    class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:text-sm">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -163,6 +194,24 @@
     </div>
 
     <script>
+        // Initialize Stripe
+        const stripe = Stripe('your_publishable_key'); // Replace with your Stripe publishable key
+        const elements = stripe.elements();
+        const card = elements.create('card');
+        
+        // Mount the card element
+        card.mount('#card-element');
+
+        // Handle real-time validation errors
+        card.addEventListener('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
         // Backend URL Configuration
         const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app'; // Change this to your Flask backend URL
 
@@ -171,11 +220,74 @@
         const downloadSection = document.getElementById('downloadSection');
         const errorSection = document.getElementById('errorSection');
         const generateBtn = document.getElementById('generateBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
+         const payBtn = document.getElementById('payBtn');
+        const paymentModal = document.getElementById('paymentModal');
+        const closePaymentModal = document.getElementById('closePaymentModal');
+        const statusMessage = document.getElementById('statusMessage');
+        const statusSpinner = document.getElementById('statusSpinner');
+        const errorMessage = document.getElementById('errorMessage');
         const statusMessage = document.getElementById('statusMessage');
         const statusSpinner = document.getElementById('statusSpinner');
         const errorMessage = document.getElementById('errorMessage');
 
+        payBtn.addEventListener('click', () => {
+            paymentModal.classList.remove('hidden');
+        });
+
+        closePaymentModal.addEventListener('click', () => {
+            paymentModal.classList.add('hidden');
+        });
+
+        // Handle form submission
+        const paymentForm = document.getElementById('payment-form');
+        paymentForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const ticker = document.getElementById('ticker').value;
+            
+            try {
+                // Create payment intent on your backend
+                const intentResponse = await fetch(`${BACKEND_URL}/create-payment-intent`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        amount: 200, // $2.00 in cents
+                        ticker: ticker
+                    }),
+                });
+
+                const {clientSecret} = await intentResponse.json();
+
+                // Confirm the payment with Stripe
+                const result = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: card,
+                        billing_details: {
+                            // You can collect billing details if needed
+                        },
+                    },
+                });
+
+                if (result.error) {
+                    // Handle payment error
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = result.error.message;
+                } else {
+                    // Payment successful
+                    paymentModal.classList.add('hidden');
+                    
+                    // Download the report
+                    window.location.href = `${BACKEND_URL}/download/${ticker}`;
+                }
+            } catch (error) {
+                console.error('Payment failed:', error);
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = 'Payment failed. Please try again.';
+            }
+        });
+        
         // Step status tracking
         const steps = {
             'starting': -1,
