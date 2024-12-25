@@ -48,29 +48,9 @@
                 </button>
             </form>
 
-            <!-- Payment Section -->
-            <div id="paymentSection" class="mt-8 hidden">
-                <div class="bg-blue-50 rounded-lg p-6 text-center">
-                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Complete Payment</h3>
-                    <p class="text-sm text-blue-600 mb-4">Please complete the payment to generate your analysis report.</p>
-                    <div class="mb-4">
-                        <p class="text-sm text-gray-600 mb-2">Price: $2.00</p>
-                        <button id="paymentButton"
-                                class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 
-                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-                                       transition duration-150 ease-in-out flex items-center justify-center">
-                            <span>Pay with Wise</span>
-                            <i class="fas fa-credit-card ml-2"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Progress Tracking -->
             <div id="progressSection" class="mt-8 hidden">
                 <h3 class="text-lg font-semibold mb-4">Analysis Progress</h3>
                 <div class="space-y-4">
-                    <!-- Progress steps -->
                     <div id="progressSteps" class="space-y-3">
                         <div class="step" data-step="running_ctf">
                             <div class="flex items-center">
@@ -138,7 +118,6 @@
                         </div>
                     </div>
                     
-                    <!-- Current Status -->
                     <div class="bg-gray-50 rounded-lg p-4">
                         <div class="flex items-center">
                             <div id="statusSpinner" class="animate-spin mr-3 h-5 w-5 text-blue-500 hidden">
@@ -150,7 +129,6 @@
                 </div>
             </div>
             
-          <!-- Download Section -->
             <div id="downloadSection" class="mt-8 hidden">
                 <div class="bg-green-50 rounded-lg p-6 text-center">
                     <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
@@ -165,7 +143,6 @@
                 </div>
             </div>
             
-            <!-- Error Section -->
             <div id="errorSection" class="mt-8 hidden">
                 <div class="bg-red-50 rounded-lg p-6 text-center">
                     <i class="fas fa-exclamation-circle text-red-500 text-4xl mb-3"></i>
@@ -182,23 +159,30 @@
         </div>
     </div>
 
-<script>
-    const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
-          const form = document.getElementById('reportForm');
-        const paymentSection = document.getElementById('paymentSection');
-        const progressSection = document.getElementById('progressSection');
-        const downloadSection = document.getElementById('downloadSection');
-        const errorSection = document.getElementById('errorSection');
+    <script>
+        const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
         const generateBtn = document.getElementById('generateBtn');
-        
-        form.addEventListener('submit', async (e) => {
+        const form = document.getElementById('reportForm');
+
+        generateBtn.addEventListener('click', async (e) => {
             e.preventDefault();
-            hideAllSections();
-            generateBtn.disabled = true;
-            generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
             
-            const formData = new FormData(form);
+            const ticker = document.getElementById('ticker').value.trim();
+            const companyName = document.getElementById('company_name').value.trim();
+            
+            if (!ticker || !companyName) {
+                showError('Please provide both ticker and company name');
+                return;
+            }
+            
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+            
             try {
+                const formData = new FormData();
+                formData.append('ticker', ticker);
+                formData.append('company_name', companyName);
+                
                 const response = await fetch(`${BACKEND_URL}/generate`, {
                     method: 'POST',
                     body: formData
@@ -209,65 +193,53 @@
                 }
                 
                 const data = await response.json();
-                if (data.status === 'payment_required') {
+                
+                if (data.paymentUrl && data.id) {
+                    localStorage.setItem('currentAnalysis', JSON.stringify({
+                        ticker: ticker,
+                        paymentId: data.id,
+                        expiresAt: data.expiresAt
+                    }));
+                    
                     window.location.href = data.paymentUrl;
-                    await checkPaymentAndStartAnalysis(data.ticker);
+                } else {
+                    throw new Error('Invalid payment response');
                 }
             } catch (error) {
                 showError(error.message);
+                resetButton();
             }
         });
-        
-        async function checkPaymentAndStartAnalysis(ticker) {
-            while (true) {
-                try {
-                    const statusResponse = await fetch(`${BACKEND_URL}/payment-status/${ticker}`);
-                    const statusData = await statusResponse.json();
-                    
-                    if (statusData.status === 'completed') {
-                        const startResponse = await fetch(`${BACKEND_URL}/start-analysis/${ticker}`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                company_name: document.getElementById('company_name').value
-                            })
-                        });
-                        
-                        if (!startResponse.ok) {
-                            throw new Error('Failed to start analysis');
-                        }
-                        
-                        progressSection.classList.remove('hidden');
-                        await pollStatus(ticker);
-                        break;
-                    } else if (statusData.status === 'failed') {
-                        throw new Error('Payment failed');
-                    }
-                    
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                } catch (error) {
-                    showError(error.message);
-                    break;
+
+        async function checkPaymentStatus(paymentId) {
+            const response = await fetch(`${BACKEND_URL}/payment-status/${paymentId}`);
+            const data = await response.json();
+            return data.status === 'COMPLETED';
+        }
+
+        async function startAnalysis(ticker) {
+            try {
+                const response = await fetch(`${BACKEND_URL}/start-analysis/${ticker}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        company_name: document.getElementById('company_name').value
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to start analysis');
                 }
+
+                document.getElementById('progressSection').classList.remove('hidden');
+                document.getElementById('statusSpinner').classList.remove('hidden');
+                await pollAnalysisStatus(ticker);
+            } catch (error) {
+                showError(error.message);
             }
         }
-        
-        function hideAllSections() {
-            paymentSection.classList.add('hidden');
-            progressSection.classList.add('hidden');
-            downloadSection.classList.add('hidden');
-            errorSection.classList.add('hidden');
-        }
-        
-        function showError(message) {
-            errorSection.classList.remove('hidden');
-            document.getElementById('errorMessage').textContent = message;
-            generateBtn.disabled = false;
-            generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-        }
-          
 
         function updateProgress(status) {
         const stepElements = document.querySelectorAll('.step');
@@ -322,6 +294,7 @@
 
       // Add event listener for payment button
     paymentButton.addEventListener('click', handlePayment);
+        
 </script>
 </body>
 </html>
