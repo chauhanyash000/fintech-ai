@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -5,60 +6,50 @@
     <title>Stock Analysis Generator</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&family=Open+Sans:wght@400;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
-    <style>
-        .font-lora { font-family: 'Lora', serif; }
-        .font-open-sans { font-family: 'Open Sans', sans-serif; }
-        .font-poppins { font-family: 'Poppins', sans-serif; }
-        .text-deep-blue { color: #1A202C; }
-        .bg-deep-blue { background-color: #1A202C; }
-        .text-emerald { color: #2F855A; }
-        .bg-emerald { background-color: #2F855A; }
-        .hover\:bg-emerald-dark:hover { background-color: #246B48; }
-        .text-slate { color: #718096; }
-        .text-teal { color: #319795; }
-        .hover\:text-teal-dark:hover { color: #2C7A7B; }
-    </style>
 </head>
-<body class="bg-gray-50 min-h-screen font-open-sans">
+<body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
-        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md">
-            <div class="text-center p-8">
-                <h1 class="text-3xl font-bold text-deep-blue font-lora mb-2">Stock Analysis Generator</h1>
-                <p class="text-slate mt-2">Generate comprehensive stock analysis reports with AI</p>
+        <!-- Main Card -->
+        <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+             <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-gray-800">Stock Analysis Generator</h1>
+                <p class="text-gray-600 mt-2">Generate comprehensive stock analysis reports with AI</p>
                 <a href="https://stockanalysish-735704923712.us-central1.run.app/download/UBER" 
-                   class="inline-block mt-4 text-teal hover:text-teal-dark underline"
-                   target="_blank">View Sample Report (UBER Analysis)</a>
+                   class="inline-block mt-4 text-blue-500 hover:text-blue-600 underline"
+                   target="_blank">
+                    View Sample Report (UBER Analysis)
+                </a>
             </div>
             
-            <div class="px-8 pb-8">
-                <form id="reportForm" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-slate mb-1">Ticker Symbol</label>
-                            <input type="text" id="ticker" name="ticker" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald focus:border-emerald bg-gray-50">
-                            <p class="mt-1 text-xs text-slate">Example: AAPL, MSFT, GOOGL</p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-slate mb-1">Company Name</label>
-                            <input type="text" id="company_name" name="company_name" required
-                                   class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-emerald focus:border-emerald bg-gray-50">
-                            <p class="mt-1 text-xs text-slate">Example: Apple Inc., Microsoft Corporation</p>
-                        </div>
+            <!-- Input Form -->
+            <form id="reportForm" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="ticker" class="block text-sm font-medium text-gray-700">Ticker Symbol</label>
+                        <input type="text" id="ticker" name="ticker" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                      focus:border-blue-500 focus:ring-blue-500 bg-gray-50">
+                        <p class="mt-1 text-xs text-gray-500">Example: AAPL, MSFT, GOOGL</p>
                     </div>
                     
-                    <button type="submit" id="generateBtn"
-                            class="w-full bg-emerald text-white py-3 px-4 rounded-md hover:bg-emerald-dark 
-                                   focus:outline-none focus:ring-2 focus:ring-emerald focus:ring-offset-2
-                                   transition duration-150 ease-in-out flex items-center justify-center
-                                   font-poppins uppercase">
-                        <span>Generate Analysis</span>
-                        <i class="fas fa-chart-line ml-2"></i>
-                    </button>
-                </form>
-
+                    <div>
+                        <label for="company_name" class="block text-sm font-medium text-gray-700">Company Name</label>
+                        <input type="text" id="company_name" name="company_name" required
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                      focus:border-blue-500 focus:ring-blue-500 bg-gray-50">
+                        <p class="mt-1 text-xs text-gray-500">Example: Apple Inc., Microsoft Corporation</p>
+                    </div>
+                </div>
+                
+                <button type="submit" id="generateBtn"
+                        class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                               transition duration-150 ease-in-out flex items-center justify-center">
+                    <span>Generate Analysis</span>
+                    <i class="fas fa-chart-line ml-2"></i>
+                </button>
+            </form>
             
             <!-- Progress Tracking -->
             <div id="progressSection" class="mt-8 hidden">
@@ -144,22 +135,24 @@
                 </div>
             </div>
             
-          <div id="downloadSection" class="mt-8 hidden">
-                    <div class="bg-emerald bg-opacity-10 rounded-lg p-6 text-center">
-                        <i class="fas fa-check-circle text-emerald text-4xl mb-3"></i>
-                        <h3 class="text-lg font-lora font-bold text-deep-blue mb-2">Analysis Complete!</h3>
-                        <p class="text-emerald mb-4">Your comprehensive stock analysis report is ready.</p>
-                        <p class="text-slate mb-2">Price: $2.00</p>
+            <!-- Download Section with Wise -->
+            <div id="downloadSection" class="mt-8 hidden">
+                <div class="bg-green-50 rounded-lg p-6 text-center">
+                    <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
+                    <h3 class="text-lg font-semibold text-green-800 mb-2">Analysis Complete!</h3>
+                    <p class="text-sm text-green-600 mb-4">Your comprehensive stock analysis report is ready.</p>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">Price: $2.00</p>
                         <button id="paymentButton"
-                                class="w-full bg-emerald text-white py-3 px-4 rounded-md hover:bg-emerald-dark 
-                                       focus:outline-none focus:ring-2 focus:ring-emerald focus:ring-offset-2
-                                       transition duration-150 ease-in-out flex items-center justify-center
-                                       font-poppins uppercase">
+                                class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                                       transition duration-150 ease-in-out flex items-center justify-center">
                             <span>Pay with Wise</span>
                             <i class="fas fa-credit-card ml-2"></i>
                         </button>
                     </div>
                 </div>
+            </div>
                         
             <!-- Error Section -->
             <div id="errorSection" class="mt-8 hidden">
