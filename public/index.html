@@ -13,6 +13,11 @@
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-800">Stock Analysis Generator</h1>
                 <p class="text-gray-600 mt-2">Generate comprehensive stock analysis reports with AI</p>
+                <a href="https://stockanalysish-735704923712.us-central1.run.app/download/UBER" 
+                   class="inline-block mt-4 text-blue-500 hover:text-blue-600 underline"
+                   target="_blank">
+                    View Sample Report (UBER Analysis)
+                </a>
             </div>
             
             <form id="reportForm" class="space-y-6">
@@ -20,38 +25,47 @@
                     <div>
                         <label for="ticker" class="block text-sm font-medium text-gray-700">Ticker Symbol</label>
                         <input type="text" id="ticker" name="ticker" required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-50">
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                      focus:border-blue-500 focus:ring-blue-500 bg-gray-50">
                         <p class="mt-1 text-xs text-gray-500">Example: AAPL, MSFT, GOOGL</p>
                     </div>
                     
                     <div>
                         <label for="company_name" class="block text-sm font-medium text-gray-700">Company Name</label>
                         <input type="text" id="company_name" name="company_name" required
-                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 bg-gray-50">
+                               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm 
+                                      focus:border-blue-500 focus:ring-blue-500 bg-gray-50">
                         <p class="mt-1 text-xs text-gray-500">Example: Apple Inc., Microsoft Corporation</p>
                     </div>
                 </div>
-
-                <!-- Payment Status Indicator -->
-                <div id="paymentStatus" class="flex items-center justify-between p-4 bg-gray-50 rounded-lg mb-4 hidden">
-                    <div class="flex items-center">
-                        <div id="paymentStatusIcon" class="w-4 h-4 rounded-full mr-3"></div>
-                        <span id="paymentStatusText" class="text-sm"></span>
-                    </div>
-                    <button id="completePaymentBtn" type="button" 
-                            class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none focus:ring-2">
-                        Complete Payment ($2.00)
-                    </button>
-                </div>
                 
                 <button type="submit" id="generateBtn"
-                        class="w-full bg-gray-400 text-white py-3 px-4 rounded-md cursor-not-allowed opacity-50 
+                        class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 
+                               focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                                transition duration-150 ease-in-out flex items-center justify-center">
-                    <span>Generate Analysis</span>
+                    <span>Generate Analysis ($2.00)</span>
                     <i class="fas fa-chart-line ml-2"></i>
                 </button>
             </form>
 
+            <!-- Payment Section -->
+            <div id="paymentSection" class="mt-8 hidden">
+                <div class="bg-blue-50 rounded-lg p-6 text-center">
+                    <h3 class="text-lg font-semibold text-blue-800 mb-2">Complete Payment</h3>
+                    <p class="text-sm text-blue-600 mb-4">Please complete the payment to generate your analysis report.</p>
+                    <div class="mb-4">
+                        <p class="text-sm text-gray-600 mb-2">Price: $2.00</p>
+                        <button id="paymentButton"
+                                class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 
+                                       focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                                       transition duration-150 ease-in-out flex items-center justify-center">
+                            <span>Pay with Wise</span>
+                            <i class="fas fa-credit-card ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Progress Tracking -->
             <div id="progressSection" class="mt-8 hidden">
                 <h3 class="text-lg font-semibold mb-4">Analysis Progress</h3>
@@ -136,13 +150,13 @@
                 </div>
             </div>
             
-            <!-- Download Section -->
+          <!-- Download Section -->
             <div id="downloadSection" class="mt-8 hidden">
                 <div class="bg-green-50 rounded-lg p-6 text-center">
                     <i class="fas fa-check-circle text-green-500 text-4xl mb-3"></i>
                     <h3 class="text-lg font-semibold text-green-800 mb-2">Analysis Complete!</h3>
                     <p class="text-sm text-green-600 mb-4">Your comprehensive stock analysis report is ready.</p>
-                    <a id="downloadBtn" href="#" 
+                    <a id="downloadButton" href="#" target="_blank"
                        class="inline-flex items-center px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 
                               focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors">
                         <i class="fas fa-download mr-2"></i>
@@ -155,8 +169,8 @@
             <div id="errorSection" class="mt-8 hidden">
                 <div class="bg-red-50 rounded-lg p-6 text-center">
                     <i class="fas fa-exclamation-circle text-red-500 text-4xl mb-3"></i>
-                    <h3 class="text-lg font-semibold text-red-800 mb-2">Analysis Failed</h3>
-                    <p id="errorMessage" class="text-sm text-red-600 mb-4">An error occurred during the analysis.</p>
+                    <h3 class="text-lg font-semibold text-red-800 mb-2">Error</h3>
+                    <p id="errorMessage" class="text-sm text-red-600 mb-4">An error occurred.</p>
                     <button onclick="location.reload()" 
                             class="inline-flex items-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 
                                    focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors">
@@ -167,77 +181,147 @@
             </div>
         </div>
     </div>
-    
+
 <script>
-                const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
-                
-        const form = document.getElementById('reportForm');
-        const generateBtn = document.getElementById('generateBtn');
+    const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
+          const form = document.getElementById('reportForm');
+        const paymentSection = document.getElementById('paymentSection');
         const progressSection = document.getElementById('progressSection');
         const downloadSection = document.getElementById('downloadSection');
         const errorSection = document.getElementById('errorSection');
-        const statusMessage = document.getElementById('statusMessage');
-        const statusSpinner = document.getElementById('statusSpinner');
+        const generateBtn = document.getElementById('generateBtn');
         
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+            hideAllSections();
+            generateBtn.disabled = true;
+            generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
             
             const formData = new FormData(form);
-            const ticker = formData.get('ticker').toUpperCase();
-            
             try {
-                generateBtn.disabled = true;
-                generateBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                
                 const response = await fetch(`${BACKEND_URL}/generate`, {
                     method: 'POST',
                     body: formData
                 });
                 
-                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error('Failed to start analysis');
+                }
                 
-                if (response.ok && data.paymentUrl) {
-                    window.open(data.paymentUrl, '_blank');
-                    pollAnalysisStatus(ticker);
-                } else {
-                    throw new Error(data.error || 'Failed to start analysis');
+                const data = await response.json();
+                if (data.status === 'payment_required') {
+                    window.location.href = data.paymentUrl;
+                    await checkPaymentAndStartAnalysis(data.ticker);
                 }
             } catch (error) {
                 showError(error.message);
-                generateBtn.disabled = false;
-                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
         });
         
-        const pollAnalysisStatus = async (ticker) => {
-            progressSection.classList.remove('hidden');
-            statusSpinner.classList.remove('hidden');
-            
-            try {
-                while (true) {
-                    const response = await fetch(`${BACKEND_URL}/status/${ticker}`);
-                    const data = await response.json();
+        async function checkPaymentAndStartAnalysis(ticker) {
+            while (true) {
+                try {
+                    const statusResponse = await fetch(`${BACKEND_URL}/payment-status/${ticker}`);
+                    const statusData = await statusResponse.json();
                     
-                    statusMessage.textContent = data.message;
-                    updateProgress(data.status);
-                    
-                    if (data.status === 'completed') {
-                        statusSpinner.classList.add('hidden');
-                        downloadSection.classList.remove('hidden');
+                    if (statusData.status === 'completed') {
+                        const startResponse = await fetch(`${BACKEND_URL}/start-analysis/${ticker}`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                company_name: document.getElementById('company_name').value
+                            })
+                        });
+                        
+                        if (!startResponse.ok) {
+                            throw new Error('Failed to start analysis');
+                        }
+                        
+                        progressSection.classList.remove('hidden');
+                        await pollStatus(ticker);
                         break;
-                    } else if (data.status === 'failed') {
-                        throw new Error('Analysis failed');
+                    } else if (statusData.status === 'failed') {
+                        throw new Error('Payment failed');
                     }
                     
                     await new Promise(resolve => setTimeout(resolve, 2000));
+                } catch (error) {
+                    showError(error.message);
+                    break;
                 }
-            } catch (error) {
-                showError(error.message);
-            } finally {
-                generateBtn.disabled = false;
-                generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             }
-        };
-    </script>
+        }
+        
+        function hideAllSections() {
+            paymentSection.classList.add('hidden');
+            progressSection.classList.add('hidden');
+            downloadSection.classList.add('hidden');
+            errorSection.classList.add('hidden');
+        }
+        
+        function showError(message) {
+            errorSection.classList.remove('hidden');
+            document.getElementById('errorMessage').textContent = message;
+            generateBtn.disabled = false;
+            generateBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+          
+
+        function updateProgress(status) {
+        const stepElements = document.querySelectorAll('.step');
+        const currentStep = steps[status];
+
+        stepElements.forEach((element, index) => {
+            const statusIcon = element.querySelector('.status-icon');
+            const checkIcon = element.querySelector('.fas.fa-check');
+            
+            if (index < currentStep) {
+                statusIcon.classList.remove('border-gray-300', 'border-blue-500');
+                statusIcon.classList.add('bg-green-500', 'border-green-500');
+                checkIcon.classList.remove('hidden');
+            } else if (index === currentStep) {
+                statusIcon.classList.remove('border-gray-300', 'bg-green-500', 'border-green-500');
+                statusIcon.classList.add('border-blue-500');
+                checkIcon.classList.add('hidden');
+            } else {
+                statusIcon.classList.remove('bg-green-500', 'border-green-500', 'border-blue-500');
+                statusIcon.classList.add('border-gray-300');
+                checkIcon.classList.add('hidden');
+            }
+        });
+    }
+
+    async function pollStatus(ticker) {
+        while (true) {
+            try {
+                const statusResponse = await fetch(`${BACKEND_URL}/status/${ticker}`);
+                if (!statusResponse.ok) {
+                    throw new Error('Failed to get status update');
+                }
+                
+                const statusData = await statusResponse.json();
+                statusMessage.textContent = statusData.message;
+                updateProgress(statusData.status);
+                
+                if (statusData.status === 'completed') {
+                    statusSpinner.classList.add('hidden');
+                    downloadSection.classList.remove('hidden');
+                    break;
+                } else if (statusData.status === 'failed') {
+                    throw new Error('Analysis generation failed. Please try again.');
+                }
+                
+                await new Promise(resolve => setTimeout(resolve, 2000));
+            } catch (error) {
+                throw error;
+            }
+        }
+    }
+
+      // Add event listener for payment button
+    paymentButton.addEventListener('click', handlePayment);
+</script>
 </body>
 </html>
