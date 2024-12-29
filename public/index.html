@@ -35,6 +35,17 @@
     <div class="container mx-auto px-4 py-8">
         <!-- Auth Forms -->
         <div id="auth-forms" class="max-w-md mx-auto">
+            <!-- Signup Payment Section -->
+            <div id="signup-payment-section" class="bg-white p-8 rounded-lg shadow-md hidden">
+                <h2 class="text-2xl font-bold mb-6">Complete Signup Payment</h2>
+                <p class="mb-4">Please complete the $10 signup payment to activate your account.</p>
+                <div class="mb-6">
+                    <a id="signup-payment-link" href="#" target="_blank" class="block w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 text-center">
+                        Pay $10.00
+                    </a>
+                </div>
+                <p class="text-sm text-gray-600">After completing the payment, your account will be automatically activated.</p>
+            </div>
             <!-- Login Form -->
             <div id="login-form" class="bg-white p-8 rounded-lg shadow-md hidden">
                 <h2 class="text-2xl font-bold mb-6">Login</h2>
@@ -53,49 +64,9 @@
                 </form>
             </div>
 
-            <!-- Signup Form -->
-            <div id="signup-form" class="bg-white p-8 rounded-lg shadow-md hidden">
-                <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
-                <form onsubmit="handleSignup(event)">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2">Name</label>
-                        <input type="text" id="signup-name" required class="w-full p-2 border rounded">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2">Email</label>
-                        <input type="email" id="signup-email" required class="w-full p-2 border rounded">
-                    </div>
-                    <div class="mb-6">
-                        <label class="block text-gray-700 mb-2">Password</label>
-                        <input type="password" id="signup-password" required class="w-full p-2 border rounded">
-                    </div>
-                    <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">
-                        Sign Up
-                    </button>
-                </form>
-            </div>
-        </div>
 
-        <!-- Stock Analysis Form -->
-        <div id="analysis-form" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold mb-6">Generate Stock Analysis</h2>
-            <form onsubmit="handleAnalysis(event)">
-                <div class="mb-4">
-                    <label class="block text-gray-700 mb-2">Ticker Symbol</label>
-                    <input type="text" id="ticker-input" required class="w-full p-2 border rounded uppercase">
-                </div>
-                <div class="mb-6">
-                    <label class="block text-gray-700 mb-2">Company Name</label>
-                    <input type="text" id="company-name-input" required class="w-full p-2 border rounded">
-                </div>
-                <button type="submit" class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
-                    Generate Report
-                </button>
-            </form>
-        </div>
-
-
-        <div class="container mx-auto px-4 py-8">
+            
+    <div class="container mx-auto px-4 py-8">
         <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
             <div class="text-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-800">AI-Stock Analysis Generator</h1>
@@ -125,7 +96,64 @@
                     View Sample Report (UBER Analysis)
                 </a>
             </div>
+
             
+            <!-- Signup Form -->
+            <div id="signup-form" class="bg-white p-8 rounded-lg shadow-md hidden">
+                <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
+                <form onsubmit="handleSignup(event)">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Name</label>
+                        <input type="text" id="signup-name" required class="w-full p-2 border rounded">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="signup-email" required class="w-full p-2 border rounded">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Password</label>
+                        <input type="password" id="signup-password" required class="w-full p-2 border rounded">
+                    </div>
+                    <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">
+                        Sign Up
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Stock Analysis Section -->
+        <div id="analysis-form" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md hidden">
+            <h2 class="text-2xl font-bold mb-6">Stock Analysis Dashboard</h2>
+            
+            <!-- Analysis Input Form -->
+            <form onsubmit="handleAnalysis(event)" class="mb-8">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Ticker Symbol</label>
+                    <input type="text" id="ticker-input" required class="w-full p-2 border rounded uppercase" placeholder="e.g., AAPL">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">Company Name</label>
+                    <input type="text" id="company-name-input" required class="w-full p-2 border rounded" placeholder="e.g., Apple Inc">
+                </div>
+                <div class="flex space-x-4">
+                    <button type="submit" class="flex-1 py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Generate Analysis
+                    </button>
+                    <button type="button" onclick="clearAnalysis()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300">
+                        Clear
+                    </button>
+                </div>
+            </form>
+
+            <!-- Previous Reports Section -->
+            <div id="previous-reports" class="border-t pt-6">
+                <h3 class="text-lg font-semibold mb-4">Previous Reports</h3>
+                <div id="reports-list" class="space-y-2">
+                    <!-- Reports will be populated here -->
+                </div>
+            </div>
+        </div>
+
         <!-- Status Display -->
         <div id="status-display" class="max-w-md mx-auto mt-8 hidden">
             <div class="bg-white p-6 rounded-lg shadow-md">
@@ -161,6 +189,8 @@
         let paymentInterval = null;
         let statusInterval = null;
 
+         const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
+
         // Auth state management
         function updateAuthState(isLoggedIn, email = '') {
             document.getElementById('nav-auth-section').style.display = isLoggedIn ? 'none' : 'block';
@@ -187,7 +217,7 @@
         async function handleLogin(event) {
             event.preventDefault();
             try {
-                const response = await axios.post('/login', {
+                const response = await axios.post('${BACKEND_URL}/login', {
                     email: document.getElementById('login-email').value,
                     password: document.getElementById('login-password').value
                 });
@@ -202,19 +232,46 @@
         async function handleSignup(event) {
             event.preventDefault();
             try {
-                const response = await axios.post('/signup/init', {
+                const response = await axios.post('${BACKEND_URL}/signup/init', {
                     name: document.getElementById('signup-name').value,
                     email: document.getElementById('signup-email').value,
                     password: document.getElementById('signup-password').value
                 });
                 
                 if (response.data.paymentUrl) {
-                    window.location.href = response.data.paymentUrl;
+                    // Show payment section and hide signup form
+                    document.getElementById('signup-form').style.display = 'none';
+                    document.getElementById('signup-payment-section').style.display = 'block';
+                    document.getElementById('signup-payment-link').href = response.data.paymentUrl;
+                    
                     // Start checking payment status
-                    checkPaymentStatus(response.data.paymentId);
+                    startSignupPaymentCheck(response.data.paymentId);
                 }
             } catch (error) {
                 alert('Signup failed: ' + (error.response?.data?.message || 'Unknown error'));
+            }
+        }
+
+        let signupPaymentInterval = null;
+
+        function startSignupPaymentCheck(paymentId) {
+            if (signupPaymentInterval) clearInterval(signupPaymentInterval);
+            signupPaymentInterval = setInterval(() => checkSignupPaymentStatus(paymentId), 5000);
+        }
+
+        async function checkSignupPaymentStatus(paymentId) {
+            try {
+                const response = await axios.get(`${BACKEND_URL}/signup/verify-payment/${paymentId}`);
+                if (response.data.status === 'success') {
+                    clearInterval(signupPaymentInterval);
+                    // Update UI to show successful signup
+                    document.getElementById('signup-payment-section').style.display = 'none';
+                    document.getElementById('analysis-form').style.display = 'block';
+                    updateAuthState(true, response.data.email);
+                    alert('Signup completed successfully! You can now generate analysis reports.');
+                }
+            } catch (error) {
+                console.error('Payment status check failed:', error);
             }
         }
 
@@ -234,18 +291,60 @@
             const companyName = document.getElementById('company-name-input').value;
 
             try {
+                // Show loading state
+                const submitButton = event.target.querySelector('button[type="submit"]');
+                const originalText = submitButton.textContent;
+                submitButton.disabled = true;
+                submitButton.textContent = 'Generating...';
+
                 const formData = new FormData();
                 formData.append('ticker', currentTicker);
                 formData.append('company_name', companyName);
 
-                await axios.post('/generate', formData);
+                const response = await axios.post('${BACKEND_URL}/generate', formData);
                 
-                // Show status display and start checking status
-                document.getElementById('status-display').style.display = 'block';
-                startStatusCheck();
+                if (response.data.status === 'starting') {
+                    // Show status display and start checking status
+                    document.getElementById('status-display').style.display = 'block';
+                    document.getElementById('status-message').textContent = 'Starting analysis...';
+                    startStatusCheck();
+                    
+                    // Add to reports list
+                    addToReportsList(currentTicker, 'In Progress');
+                }
             } catch (error) {
-                alert('Analysis request failed: ' + error.message);
+                alert('Analysis request failed: ' + (error.response?.data?.message || error.message));
+            } finally {
+                // Reset button state
+                const submitButton = event.target.querySelector('button[type="submit"]');
+                submitButton.disabled = false;
+                submitButton.textContent = 'Generate Analysis';
             }
+        }
+
+        function clearAnalysis() {
+            document.getElementById('ticker-input').value = '';
+            document.getElementById('company-name-input').value = '';
+            document.getElementById('status-display').style.display = 'none';
+            document.getElementById('download-section').style.display = 'none';
+        }
+
+        function addToReportsList(ticker, status) {
+            const reportsList = document.getElementById('reports-list');
+            const reportItem = document.createElement('div');
+            reportItem.className = 'flex justify-between items-center p-3 bg-gray-50 rounded';
+            reportItem.innerHTML = `
+                <div>
+                    <span class="font-medium">${ticker}</span>
+                    <span class="ml-2 text-sm ${status === 'In Progress' ? 'text-blue-500' : 'text-green-500'}">${status}</span>
+                </div>
+                ${status !== 'In Progress' ? `
+                    <button onclick="downloadReport('${ticker}')" class="text-sm text-blue-500 hover:text-blue-700">
+                        Download
+                    </button>
+                ` : ''}
+            `;
+            reportsList.insertBefore(reportItem, reportsList.firstChild);
         }
 
         function startStatusCheck() {
@@ -255,7 +354,7 @@
 
         async function checkAnalysisStatus() {
             try {
-                const response = await axios.get(`/status/${currentTicker}`);
+                const response = await axios.get(`${BACKEND_URL}/status/${currentTicker}`);
                 const status = response.data.status;
                 const message = response.data.message;
 
@@ -294,7 +393,7 @@
         // Payment and download handlers
         async function initiatePayment() {
             try {
-                const response = await axios.post('/create-payment', { ticker: currentTicker });
+                const response = await axios.post('${BACKEND_URL}/create-payment', { ticker: currentTicker });
                 if (response.data.paymentUrl) {
                     window.location.href = response.data.paymentUrl;
                     startPaymentCheck(response.data.paymentId);
@@ -311,7 +410,7 @@
 
         async function checkPaymentStatus(paymentId) {
             try {
-                const response = await axios.get(`/payment-status/${currentTicker}`);
+                const response = await axios.get(`${BACKEND_URL}/payment-status/${currentTicker}`);
                 if (response.data.status === 'completed') {
                     clearInterval(paymentInterval);
                     document.getElementById('payment-buttons').style.display = 'none';
@@ -324,7 +423,7 @@
 
         async function downloadReport() {
             try {
-                window.location.href = `/download/${currentTicker}`;
+                window.location.href = `${BACKEND_URL}/download/${currentTicker}`;
                 // Cleanup after successful download
                 await axios.post(`/cleanup/${currentTicker}`);
             } catch (error) {
