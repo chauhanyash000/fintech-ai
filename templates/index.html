@@ -69,29 +69,48 @@
    
 
             
-            <!-- Signup Form -->
-            <div id="signup-form" class="bg-white p-8 rounded-lg shadow-md hidden">
-                <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
-                <form onsubmit="handleSignup(event)">
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2">Name</label>
-                        <input type="text" id="signup-name" required class="w-full p-2 border rounded">
-                    </div>
-                    <div class="mb-4">
-                        <label class="block text-gray-700 mb-2">Email</label>
-                        <input type="email" id="signup-email" required class="w-full p-2 border rounded">
-                    </div>
-                    <div class="mb-6">
-                        <label class="block text-gray-700 mb-2">Password</label>
-                        <input type="password" id="signup-password" required class="w-full p-2 border rounded">
-                    </div>
-                    <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">
-                        Sign Up
-                    </button>
-                </form>
+          <div id="signup-form" class="bg-white p-8 rounded-lg shadow-md hidden">
+        <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
+        <div class="mb-4 bg-blue-50 p-4 rounded-lg">
+            <p class="text-blue-800">One-time signup fee: $10.00</p>
+            <p class="text-sm text-blue-600 mt-1">Get unlimited access to AI-powered stock analysis</p>
+        </div>
+        <form onsubmit="handleSignup(event)">
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Name</label>
+                <input type="text" id="signup-name" required class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-4">
+                <label class="block text-gray-700 mb-2">Email</label>
+                <input type="email" id="signup-email" required class="w-full p-2 border rounded">
+            </div>
+            <div class="mb-6">
+                <label class="block text-gray-700 mb-2">Password</label>
+                <input type="password" id="signup-password" required class="w-full p-2 border rounded">
+            </div>
+            <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">
+                Continue to Payment
+            </button>
+        </form>
+    </div>
+
+
+             <!-- Login Dialog -->
+    <div id="login-dialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full">
+            <h3 class="text-xl font-bold mb-4">Login Required</h3>
+            <p class="text-gray-600 mb-6">Please login to access the stock analysis feature.</p>
+            <div class="flex justify-end space-x-4">
+                <button onclick="closeLoginDialog()" class="px-4 py-2 text-gray-600 bg-gray-100 rounded hover:bg-gray-200">
+                    Cancel
+                </button>
+                <button onclick="showLoginForm()" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    Login
+                </button>
             </div>
         </div>
-
+    </div>
+            
         <!-- Stock Analysis Section -->
         <div id="analysis-form" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md hidden">
             <h2 class="text-2xl font-bold mb-6">Stock Analysis Dashboard</h2>
@@ -191,58 +210,46 @@
 
          const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
 
+         let signupPaymentInterval = null;
         // Auth state management
-        function updateAuthState(isLoggedIn, email = '') {
-            document.getElementById('nav-auth-section').style.display = isLoggedIn ? 'none' : 'block';
-            document.getElementById('nav-user-section').style.display = isLoggedIn ? 'block' : 'none';
-            document.getElementById('auth-forms').style.display = isLoggedIn ? 'none' : 'block';
-            document.getElementById('analysis-form').style.display = isLoggedIn ? 'block' : 'none';
-            if (isLoggedIn) {
-                document.getElementById('user-email').textContent = email;
-            }
+ // Add login dialog functions
+        function showLoginDialog() {
+            document.getElementById('login-dialog').style.display = 'flex';
         }
 
-        // Form visibility toggles
-        function showLoginForm() {
-            document.getElementById('login-form').style.display = 'block';
-            document.getElementById('signup-form').style.display = 'none';
+        function closeLoginDialog() {
+            document.getElementById('login-dialog').style.display = 'none';
         }
 
-        function showSignupForm() {
-            document.getElementById('login-form').style.display = 'none';
-            document.getElementById('signup-form').style.display = 'block';
-        }
-
-        // Auth handlers
-        async function handleLogin(event) {
+        // Update form submission handler
+        document.getElementById('reportForm').addEventListener('submit', function(event) {
             event.preventDefault();
-            try {
-                const response = await axios.post('${BACKEND_URL}/login', {
-                    email: document.getElementById('login-email').value,
-                    password: document.getElementById('login-password').value
-                });
-                if (response.data.status === 'success') {
-                    updateAuthState(true, response.data.email);
-                }
-            } catch (error) {
-                alert('Login failed: ' + (error.response?.data?.message || 'Unknown error'));
+            if (!localStorage.getItem('userEmail')) {
+                showLoginDialog();
+                return;
             }
-        }
+            handleAnalysis(event);
+        });
 
         async function handleSignup(event) {
             event.preventDefault();
             try {
-                const response = await axios.post('${BACKEND_URL}/signup/init', {
+                const response = await axios.post(`${BACKEND_URL}/signup/init`, {
                     name: document.getElementById('signup-name').value,
                     email: document.getElementById('signup-email').value,
                     password: document.getElementById('signup-password').value
                 });
                 
-                if (response.data.paymentUrl) {
+                if (response.data.status === 'payment_required') {
+                    // Store email for later use
+                    localStorage.setItem('pendingSignupEmail', document.getElementById('signup-email').value);
+                    
+                    // Open payment URL in new window
+                    window.open(response.data.paymentUrl, '_blank');
+                    
                     // Show payment section and hide signup form
                     document.getElementById('signup-form').style.display = 'none';
                     document.getElementById('signup-payment-section').style.display = 'block';
-                    document.getElementById('signup-payment-link').href = response.data.paymentUrl;
                     
                     // Start checking payment status
                     startSignupPaymentCheck(response.data.paymentId);
@@ -251,8 +258,6 @@
                 alert('Signup failed: ' + (error.response?.data?.message || 'Unknown error'));
             }
         }
-
-        let signupPaymentInterval = null;
 
         function startSignupPaymentCheck(paymentId) {
             if (signupPaymentInterval) clearInterval(signupPaymentInterval);
@@ -264,11 +269,23 @@
                 const response = await axios.get(`${BACKEND_URL}/signup/verify-payment/${paymentId}`);
                 if (response.data.status === 'success') {
                     clearInterval(signupPaymentInterval);
+                    
+                    // Get stored email
+                    const email = localStorage.getItem('pendingSignupEmail');
+                    localStorage.removeItem('pendingSignupEmail');
+                    
                     // Update UI to show successful signup
                     document.getElementById('signup-payment-section').style.display = 'none';
+                    document.getElementById('auth-forms').style.display = 'none';
                     document.getElementById('analysis-form').style.display = 'block';
-                    updateAuthState(true, response.data.email);
-                    alert('Signup completed successfully! You can now generate analysis reports.');
+                    
+                    // Update auth state
+                    updateAuthState(true, email);
+                    
+                    // Store auth state
+                    localStorage.setItem('userEmail', email);
+                    
+                    alert('Signup completed successfully! You can now access stock analysis.');
                 }
             } catch (error) {
                 console.error('Payment status check failed:', error);
@@ -277,7 +294,7 @@
 
         async function logout() {
             try {
-                await axios.get('/logout');
+                await axios.get('${BACKEND_URL}/logout');
                 updateAuthState(false);
             } catch (error) {
                 alert('Logout failed: ' + error.message);
