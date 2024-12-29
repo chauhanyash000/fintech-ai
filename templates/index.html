@@ -33,29 +33,47 @@
 
     <!-- Main Content -->
     <div class="container mx-auto px-4 py-8">
-        <!-- Auth Forms -->
-        <div id="auth-forms" class="max-w-md mx-auto">
+        <!-- Auth Modal Container -->
+<div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+    <div class="relative w-full max-w-md mx-4">
+        <!-- Close Button -->
+        <button onclick="closeAuthModal()" class="absolute -top-4 right-0 text-white hover:text-gray-300">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        
+        <!-- Auth Forms Container -->
+        <div id="auth-forms" class="bg-white rounded-lg shadow-xl overflow-hidden">
             <!-- Login Form -->
-            <div id="login-form" class="bg-white p-8 rounded-lg shadow-md hidden">
-                <h2 class="text-2xl font-bold mb-6">Login</h2>
+            <div id="login-form" class="p-8 hidden">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Login</h2>
                 <form onsubmit="handleLogin(event)">
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-2">Email</label>
-                        <input type="email" id="login-email" required class="w-full p-2 border rounded">
+                        <input type="email" id="login-email" required 
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-6">
                         <label class="block text-gray-700 mb-2">Password</label>
-                        <input type="password" id="login-password" required class="w-full p-2 border rounded">
+                        <input type="password" id="login-password" required 
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <button type="submit" class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600">
+                    <button type="submit" class="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 
+                                                transition duration-200">
                         Login
                     </button>
+                    <p class="mt-4 text-center text-gray-600">
+                        Don't have an account? 
+                        <button type="button" onclick="switchToSignup()" 
+                                class="text-blue-500 hover:text-blue-700">Sign up</button>
+                    </p>
                 </form>
             </div>
 
             <!-- Signup Form -->
-            <div id="signup-form" class="bg-white p-8 rounded-lg shadow-md hidden">
-                <h2 class="text-2xl font-bold mb-6">Sign Up</h2>
+            <div id="signup-form" class="p-8 hidden">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Sign Up</h2>
                 <div class="mb-4 bg-blue-50 p-4 rounded-lg">
                     <p class="text-blue-800">One-time signup fee: $10.00</p>
                     <p class="text-sm text-blue-600 mt-1">Get unlimited access to AI-powered stock analysis</p>
@@ -63,34 +81,47 @@
                 <form onsubmit="handleSignup(event)">
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-2">Name</label>
-                        <input type="text" id="signup-name" required class="w-full p-2 border rounded">
+                        <input type="text" id="signup-name" required 
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 mb-2">Email</label>
-                        <input type="email" id="signup-email" required class="w-full p-2 border rounded">
+                        <input type="email" id="signup-email" required 
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
                     <div class="mb-6">
                         <label class="block text-gray-700 mb-2">Password</label>
-                        <input type="password" id="signup-password" required class="w-full p-2 border rounded">
+                        <input type="password" id="signup-password" required 
+                               class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                    <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600">
+                    <button type="submit" class="w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 
+                                                transition duration-200">
                         Continue to Payment
                     </button>
+                    <p class="mt-4 text-center text-gray-600">
+                        Already have an account? 
+                        <button type="button" onclick="switchToLogin()" 
+                                class="text-blue-500 hover:text-blue-700">Login</button>
+                    </p>
                 </form>
             </div>
 
-            <!-- Signup Payment Section -->
-            <div id="signup-payment-section" class="bg-white p-8 rounded-lg shadow-md hidden">
-                <h2 class="text-2xl font-bold mb-6">Complete Signup Payment</h2>
+            <!-- Payment Section -->
+            <div id="signup-payment-section" class="p-8 hidden">
+                <h2 class="text-2xl font-bold mb-6 text-gray-800">Complete Signup Payment</h2>
                 <p class="mb-4">Please complete the $10 signup payment to activate your account.</p>
                 <div class="mb-6">
-                    <a id="signup-payment-link" href="https://wise.com/pay/r/rQIQ1nmO3GH8neU" target="_blank" class="block w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 text-center">
+                    <a id="signup-payment-link" href="https://wise.com/pay/r/rQIQ1nmO3GH8neU" target="_blank" 
+                       class="block w-full py-2 px-4 bg-green-500 text-white rounded hover:bg-green-600 text-center 
+                              transition duration-200">
                         Pay $10.00
                     </a>
                 </div>
                 <p class="text-sm text-gray-600">After completing the payment, your account will be automatically activated.</p>
             </div>
         </div>
+    </div>
+</div>
 
         <!-- Login Dialog -->
         <div id="login-dialog" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
@@ -252,7 +283,47 @@ function closeLoginDialog() {
     document.getElementById('login-dialog').classList.add('hidden');
 }
 
-// Auth handlers
+// Auth Modal Functions
+function showAuthModal() {
+    document.getElementById('auth-modal').classList.remove('hidden');
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+}
+
+function closeAuthModal() {
+    document.getElementById('auth-modal').classList.add('hidden');
+    document.body.style.overflow = 'auto'; // Restore scrolling
+    hideAllAuthForms();
+}
+
+function hideAllAuthForms() {
+    document.getElementById('login-form').classList.add('hidden');
+    document.getElementById('signup-form').classList.add('hidden');
+    document.getElementById('signup-payment-section').classList.add('hidden');
+}
+
+function showLoginForm() {
+    showAuthModal();
+    hideAllAuthForms();
+    document.getElementById('login-form').classList.remove('hidden');
+}
+
+function showSignupForm() {
+    showAuthModal();
+    hideAllAuthForms();
+    document.getElementById('signup-form').classList.remove('hidden');
+}
+
+function switchToLogin() {
+    hideAllAuthForms();
+    document.getElementById('login-form').classList.remove('hidden');
+}
+
+function switchToSignup() {
+    hideAllAuthForms();
+    document.getElementById('signup-form').classList.remove('hidden');
+}
+
+// Update the handleSignup function
 async function handleSignup(event) {
     event.preventDefault();
     try {
@@ -264,10 +335,16 @@ async function handleSignup(event) {
         
         if (response.data.status === 'payment_required') {
             localStorage.setItem('pendingSignupEmail', document.getElementById('signup-email').value);
-            window.open(response.data.paymentUrl, '_blank');
             
-            document.getElementById('signup-form').classList.add('hidden');
+            // Update payment link
+            document.getElementById('signup-payment-link').href = response.data.paymentUrl;
+            
+            // Show payment section
+            hideAllAuthForms();
             document.getElementById('signup-payment-section').classList.remove('hidden');
+            
+            // Open payment in new tab
+            window.open(response.data.paymentUrl, '_blank');
             
             startSignupPaymentCheck(response.data.paymentId);
         }
@@ -276,6 +353,7 @@ async function handleSignup(event) {
     }
 }
 
+// Update successful login handling
 async function handleLogin(event) {
     event.preventDefault();
     try {
@@ -287,13 +365,22 @@ async function handleLogin(event) {
         if (response.data.status === 'success') {
             localStorage.setItem('userEmail', response.data.email);
             updateAuthState(true, response.data.email);
-            document.getElementById('login-form').classList.add('hidden');
+            closeAuthModal();
         }
     } catch (error) {
         alert('Login failed: ' + (error.response?.data?.message || 'Invalid credentials'));
     }
 }
 
+// Close modal when clicking outside
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('auth-modal');
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeAuthModal();
+        }
+    });
+});
 async function logout() {
     try {
         await axios.get(`${BACKEND_URL}/logout`);
