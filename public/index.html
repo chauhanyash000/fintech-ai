@@ -8,6 +8,61 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen">
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden">
+        <div class="flex items-center justify-center min-h-screen">
+            <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full mx-4">
+                <div id="loginForm" class="space-y-4">
+                    <h2 class="text-2xl font-bold text-center">Login</h2>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="loginEmail" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="loginPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <button onclick="handleLogin()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Login</button>
+                    <p class="text-center text-sm">
+                        Don't have an account? 
+                        <a href="#" onclick="toggleAuthForm('signup')" class="text-blue-500 hover:text-blue-600">Sign up</a>
+                    </p>
+                </div>
+                
+                <div id="signupForm" class="space-y-4 hidden">
+                    <h2 class="text-2xl font-bold text-center">Sign Up</h2>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Name</label>
+                        <input type="text" id="signupName" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Email</label>
+                        <input type="email" id="signupEmail" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Password</label>
+                        <input type="password" id="signupPassword" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    </div>
+                    <button onclick="handleSignup()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600">Sign Up</button>
+                    <p class="text-center text-sm">
+                        Already have an account? 
+                        <a href="#" onclick="toggleAuthForm('login')" class="text-blue-500 hover:text-blue-600">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Auth Status Bar -->
+        <div class="max-w-2xl mx-auto mb-4 flex justify-end">
+            <div id="authStatus" class="hidden">
+                <span id="userEmail" class="mr-4 text-gray-600"></span>
+                <button onclick="handleLogout()" class="text-blue-500 hover:text-blue-600">Logout</button>
+            </div>
+            <button id="loginButton" onclick="showAuthModal('login')" class="text-blue-500 hover:text-blue-600">Login</button>
+        </div>
+    
     <div class="container mx-auto px-4 py-8">
         <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
             <div class="text-center mb-8">
@@ -186,6 +241,132 @@
         const generateBtn = document.getElementById('generateBtn');
         const form = document.getElementById('reportForm');
 
+        let isAuthenticated = false;
+
+         document.addEventListener('DOMContentLoaded', checkAuthStatus);
+
+        function checkAuthStatus() {
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                showAuthenticatedState(userEmail);
+            } else {
+                showUnauthenticatedState();
+            }
+        }
+
+        function showAuthenticatedState(email) {
+            isAuthenticated = true;
+            document.getElementById('authStatus').classList.remove('hidden');
+            document.getElementById('loginButton').classList.add('hidden');
+            document.getElementById('userEmail').textContent = email;
+        }
+
+        function showUnauthenticatedState() {
+            isAuthenticated = false;
+            document.getElementById('authStatus').classList.add('hidden');
+            document.getElementById('loginButton').classList.remove('hidden');
+        }
+
+        function showAuthModal(type = 'login') {
+            document.getElementById('authModal').classList.remove('hidden');
+            toggleAuthForm(type);
+        }
+
+        function hideAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function toggleAuthForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            
+            if (type === 'login') {
+                loginForm.classList.remove('hidden');
+                signupForm.classList.add('hidden');
+            } else {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    localStorage.setItem('userEmail', email);
+                    hideAuthModal();
+                    showAuthenticatedState(email);
+                } else {
+                    alert(data.message || 'Login failed');
+                }
+            } catch (error) {
+                alert('Login failed: ' + error.message);
+            }
+        }
+
+        async function handleSignup() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+
+            try {
+                const response = await fetch(`${BACKEND_URL}/signup/init`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'payment_required') {
+                    // Store signup details and redirect to payment
+                    localStorage.setItem('pendingSignup', JSON.stringify({
+                        email,
+                        paymentId: data.paymentId
+                    }));
+                    window.location.href = data.paymentUrl;
+                } else {
+                    alert(data.message || 'Signup failed');
+                }
+            } catch (error) {
+                alert('Signup failed: ' + error.message);
+            }
+        }
+
+        async function handleLogout() {
+            try {
+                await fetch(`${BACKEND_URL}/logout`);
+                localStorage.removeItem('userEmail');
+                showUnauthenticatedState();
+            } catch (error) {
+                alert('Logout failed: ' + error.message);
+            }
+        }
+
+
+         async function generateReport(e) {
+            e.preventDefault();
+            
+            if (!isAuthenticated) {
+                showAuthModal('login');
+                return;
+            }
+
+        
         generateBtn.addEventListener('click', async (e) => {
             e.preventDefault();
             
@@ -230,6 +411,29 @@
             } catch (error) {
                 showError(error.message);
                 resetButton();
+            }
+        });
+
+
+        }
+         window.addEventListener('load', async () => {
+            const pendingSignup = localStorage.getItem('pendingSignup');
+            if (pendingSignup) {
+                const { paymentId } = JSON.parse(pendingSignup);
+                
+                try {
+                    const response = await fetch(`${BACKEND_URL}/signup/verify-payment/${paymentId}`);
+                    const data = await response.json();
+                    
+                    if (data.status === 'success') {
+                        localStorage.removeItem('pendingSignup');
+                        const signupData = JSON.parse(pendingSignup);
+                        localStorage.setItem('userEmail', signupData.email);
+                        showAuthenticatedState(signupData.email);
+                    }
+                } catch (error) {
+                    console.error('Payment verification failed:', error);
+                }
             }
         });
 
@@ -314,7 +518,6 @@
         }
     }
 
-      // Add event listener for payment button
     paymentButton.addEventListener('click', handlePayment);
         
 </script>
