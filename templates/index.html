@@ -231,59 +231,20 @@ let signupPaymentInterval = null;
 function updateAuthState(isLoggedIn, userEmail = null) {
     const navAuthSection = document.getElementById('nav-auth-section');
     const navUserSection = document.getElementById('nav-user-section');
-    const authForms = document.getElementById('auth-forms');
-    const analysisForm = document.getElementById('analysis-form');
     const userEmailSpan = document.getElementById('user-email');
 
     if (isLoggedIn) {
         navAuthSection.classList.add('hidden');
         navUserSection.classList.remove('hidden');
-        authForms.classList.add('hidden');
         userEmailSpan.textContent = userEmail;
     } else {
         navAuthSection.classList.remove('hidden');
         navUserSection.classList.add('hidden');
-        authForms.classList.add('hidden');
         userEmailSpan.textContent = '';
     }
 }
 
-// Form visibility handlers
-function showLoginForm() {
-    const authForms = document.getElementById('auth-forms');
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const signupPaymentSection = document.getElementById('signup-payment-section');
-    const loginDialog = document.getElementById('login-dialog');
-
-    authForms.classList.remove('hidden');
-    loginForm.classList.remove('hidden');
-    signupForm.classList.add('hidden');
-    signupPaymentSection.classList.add('hidden');
-    loginDialog.classList.add('hidden');
-}
-
-function showSignupForm() {
-    const authForms = document.getElementById('auth-forms');
-    const loginForm = document.getElementById('login-form');
-    const signupForm = document.getElementById('signup-form');
-    const signupPaymentSection = document.getElementById('signup-payment-section');
-
-    authForms.classList.remove('hidden');
-    signupForm.classList.remove('hidden');
-    loginForm.classList.add('hidden');
-    signupPaymentSection.classList.add('hidden');
-}
-
-function showLoginDialog() {
-    document.getElementById('login-dialog').classList.remove('hidden');
-}
-
-function closeLoginDialog() {
-    document.getElementById('login-dialog').classList.add('hidden');
-}
-
-// Auth Modal Functions
+// Modal visibility functions
 function showAuthModal() {
     document.getElementById('auth-modal').classList.remove('hidden');
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
@@ -301,10 +262,12 @@ function hideAllAuthForms() {
     document.getElementById('signup-payment-section').classList.add('hidden');
 }
 
+// Form visibility handlers
 function showLoginForm() {
     showAuthModal();
     hideAllAuthForms();
     document.getElementById('login-form').classList.remove('hidden');
+    closeLoginDialog();
 }
 
 function showSignupForm() {
@@ -323,7 +286,15 @@ function switchToSignup() {
     document.getElementById('signup-form').classList.remove('hidden');
 }
 
-// Update the handleSignup function
+function showLoginDialog() {
+    document.getElementById('login-dialog').classList.remove('hidden');
+}
+
+function closeLoginDialog() {
+    document.getElementById('login-dialog').classList.add('hidden');
+}
+
+// Auth handlers
 async function handleSignup(event) {
     event.preventDefault();
     try {
@@ -353,7 +324,6 @@ async function handleSignup(event) {
     }
 }
 
-// Update successful login handling
 async function handleLogin(event) {
     event.preventDefault();
     try {
@@ -372,15 +342,6 @@ async function handleLogin(event) {
     }
 }
 
-// Close modal when clicking outside
-document.addEventListener('DOMContentLoaded', () => {
-    const modal = document.getElementById('auth-modal');
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeAuthModal();
-        }
-    });
-});
 async function logout() {
     try {
         await axios.get(`${BACKEND_URL}/logout`);
