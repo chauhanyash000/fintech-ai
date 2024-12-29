@@ -190,7 +190,7 @@
     </div>
 
     <script>
- // Configuration
+// Configuration
 const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
 let currentTicker = '';
 let statusInterval = null;
@@ -219,16 +219,29 @@ function updateAuthState(isLoggedIn, userEmail = null) {
 
 // Form visibility handlers
 function showLoginForm() {
-    document.getElementById('login-form').classList.remove('hidden');
-    document.getElementById('signup-form').classList.add('hidden');
-    document.getElementById('signup-payment-section').classList.add('hidden');
-    document.getElementById('login-dialog').classList.add('hidden');
+    const authForms = document.getElementById('auth-forms');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const signupPaymentSection = document.getElementById('signup-payment-section');
+    const loginDialog = document.getElementById('login-dialog');
+
+    authForms.classList.remove('hidden');
+    loginForm.classList.remove('hidden');
+    signupForm.classList.add('hidden');
+    signupPaymentSection.classList.add('hidden');
+    loginDialog.classList.add('hidden');
 }
 
 function showSignupForm() {
-    document.getElementById('signup-form').classList.remove('hidden');
-    document.getElementById('login-form').classList.add('hidden');
-    document.getElementById('signup-payment-section').classList.add('hidden');
+    const authForms = document.getElementById('auth-forms');
+    const loginForm = document.getElementById('login-form');
+    const signupForm = document.getElementById('signup-form');
+    const signupPaymentSection = document.getElementById('signup-payment-section');
+
+    authForms.classList.remove('hidden');
+    signupForm.classList.remove('hidden');
+    loginForm.classList.add('hidden');
+    signupPaymentSection.classList.add('hidden');
 }
 
 function showLoginDialog() {
