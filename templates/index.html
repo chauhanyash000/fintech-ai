@@ -164,6 +164,40 @@
             </form>
         </div>
 
+
+        const CompanyLogos = () => {
+  const companies = [
+    { name: 'Apple', width: 40, height: 40 },
+    { name: 'Microsoft', width: 40, height: 40 },
+    { name: 'Google', width: 40, height: 40 },
+    { name: 'Amazon', width: 40, height: 40 },
+    { name: 'Tesla', width: 40, height: 40 }
+  ];
+
+  return (
+    <div className="mt-8 text-center">
+      <p className="text-gray-600 text-sm mb-4">Example Sources for Reports</p>
+      <div className="flex justify-center items-center space-x-6 mb-6">
+        {companies.map((company) => (
+          <div key={company.name} className="flex flex-col items-center">
+            <img
+              src={`/api/placeholder/${company.width}/${company.height}`}
+              alt={`${company.name} logo`}
+              className="rounded-lg"
+            />
+            <span className="text-xs text-gray-500 mt-1">{company.name}</span>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-gray-400 max-w-md mx-auto">
+        The logos shown are trademarks of their respective owners. Their use here is for informational purposes only and does not imply any endorsement or affiliation.
+      </p>
+    </div>
+  );
+};
+
+export default CompanyLogos;
+        
         <!-- Status Display -->
         <div id="status-display" class="max-w-md mx-auto mt-8 hidden">
             <div class="bg-white p-6 rounded-lg shadow-md">
@@ -437,41 +471,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-        import React from 'react';
 
-const CompanyLogos = () => {
-  const companies = [
-    { name: 'Apple', width: 40, height: 40 },
-    { name: 'Microsoft', width: 40, height: 40 },
-    { name: 'Google', width: 40, height: 40 },
-    { name: 'Amazon', width: 40, height: 40 },
-    { name: 'Tesla', width: 40, height: 40 }
-  ];
 
-  return (
-    <div className="mt-8 text-center">
-      <p className="text-gray-600 text-sm mb-4">Example Sources for Reports</p>
-      <div className="flex justify-center items-center space-x-6 mb-6">
-        {companies.map((company) => (
-          <div key={company.name} className="flex flex-col items-center">
-            <img
-              src={`/api/placeholder/${company.width}/${company.height}`}
-              alt={`${company.name} logo`}
-              className="rounded-lg"
-            />
-            <span className="text-xs text-gray-500 mt-1">{company.name}</span>
-          </div>
-        ))}
-      </div>
-      <p className="text-xs text-gray-400 max-w-md mx-auto">
-        The logos shown are trademarks of their respective owners. Their use here is for informational purposes only and does not imply any endorsement or affiliation.
-      </p>
-    </div>
-  );
-};
-
-export default CompanyLogos;
-        
     </script>
 </body>
 </html> 
