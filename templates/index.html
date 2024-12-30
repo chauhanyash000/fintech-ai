@@ -238,6 +238,81 @@
         </div>
     </div>
 
+      <!-- Footer Section -->
+    <footer class="bg-gray-800 text-gray-300 mt-16 py-8">
+        <div class="container mx-auto px-4">
+            <!-- Company Info -->
+            <div class="mb-8 text-center">
+                <h3 class="text-xl font-bold mb-2">About Us</h3>
+                <p class="mb-2">A Product of Advaita-Tech</p>
+                <a href="https://advaita-tech.com" target="_blank" class="text-blue-400 hover:text-blue-300">Visit Advaita-Tech</a>
+            </div>
+
+            <!-- Contact Info -->
+            <div class="text-center mb-8">
+                <h3 class="text-xl font-bold mb-2">Contact Us</h3>
+                <a href="mailto:yash_chauhan@advaita-tech.com" class="text-blue-400 hover:text-blue-300">yash_chauhan@advaita-tech.com</a>
+            </div>
+
+            <!-- Policies Section -->
+            <div class="max-w-4xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <!-- Privacy Policy -->
+                    <div>
+                        <button onclick="togglePolicy('privacy')" class="text-blue-400 hover:text-blue-300">Privacy Policy</button>
+                        <div id="privacy-policy" class="hidden mt-4 text-left text-sm bg-gray-700 p-4 rounded">
+                            <h4 class="font-bold mb-2">Privacy Policy</h4>
+                            <p>We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights.</p>
+                            <p class="mt-2">We collect and process your personal information only for:</p>
+                            <ul class="list-disc ml-4 mt-2">
+                                <li>Account creation and management</li>
+                                <li>Providing our stock analysis services</li>
+                                <li>Communication regarding our services</li>
+                                <li>Legal and security purposes</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Refund Policy -->
+                    <div>
+                        <button onclick="togglePolicy('refund')" class="text-blue-400 hover:text-blue-300">Refund Policy</button>
+                        <div id="refund-policy" class="hidden mt-4 text-left text-sm bg-gray-700 p-4 rounded">
+                            <h4 class="font-bold mb-2">Refund Policy</h4>
+                            <p>We offer refunds under the following conditions:</p>
+                            <ul class="list-disc ml-4 mt-2">
+                                <li>Request made within 7 days of purchase</li>
+                                <li>Service not accessed or used more than 10 times</li>
+                                <li>Technical issues preventing service access</li>
+                            </ul>
+                            <p class="mt-2">To request a refund, please contact our support team with your purchase details.</p>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div>
+                        <button onclick="togglePolicy('terms')" class="text-blue-400 hover:text-blue-300">Terms & Conditions</button>
+                        <div id="terms-conditions" class="hidden mt-4 text-left text-sm bg-gray-700 p-4 rounded">
+                            <h4 class="font-bold mb-2">Terms & Conditions</h4>
+                            <p>By using our service, you agree to:</p>
+                            <ul class="list-disc ml-4 mt-2">
+                                <li>Use the service for personal use only</li>
+                                <li>Not share or redistribute analysis reports</li>
+                                <li>Maintain the confidentiality of your account</li>
+                                <li>Accept that investment decisions are your responsibility</li>
+                            </ul>
+                            <p class="mt-2">We reserve the right to modify or terminate the service in a week's notice time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="text-center mt-8 text-sm">
+                <p>&copy; 2024 Advaita-Tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
 // Configuration
 const BACKEND_URL = 'https://stockanalysish-735704923712.us-central1.run.app';
