@@ -254,17 +254,31 @@
                 <a href="mailto:yash_chauhan@advaita-tech.com" class="text-blue-400 hover:text-blue-300">yash_chauhan@advaita-tech.com</a>
             </div>
 
-            <!-- Policies Section -->
-            <div class="max-w-4xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                    <!-- Privacy Policy -->
-                    <div>
-                        <button onclick="togglePolicy('privacy')" class="text-blue-400 hover:text-blue-300">Privacy Policy</button>
-                        <div id="privacy-policy" class="hidden mt-4 text-left text-sm bg-gray-700 p-4 rounded">
-                            <h4 class="font-bold mb-2">Privacy Policy</h4>
-                            <p>We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights.</p>
-                            <p class="mt-2">We collect and process your personal information only for:</p>
-                            <ul class="list-disc ml-4 mt-2">
+             <div class="flex justify-center gap-4 mb-8">
+            <button onclick="openDialog('privacy-dialog')" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                Privacy Policy
+            </button>
+            <button onclick="openDialog('refund-dialog')" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                Refund Policy
+            </button>
+            <button onclick="openDialog('terms-dialog')" 
+                    class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors">
+                Terms & Conditions
+            </button>
+        </div>
+
+        <!-- Privacy Policy Dialog -->
+        <dialog id="privacy-dialog" class="p-0 rounded-lg shadow-xl backdrop:bg-gray-500 backdrop:bg-opacity-50">
+            <div class="w-full max-w-2xl">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4">Privacy Policy</h3>
+                        <div class="prose">
+                            <p class="mb-4">We respect your privacy and are committed to protecting your personal data. This privacy policy will inform you about how we look after your personal data when you visit our website and tell you about your privacy rights.</p>
+                            <p class="mb-2">We collect and process your personal information only for:</p>
+                            <ul class="list-disc ml-6 mb-4">
                                 <li>Account creation and management</li>
                                 <li>Providing our stock analysis services</li>
                                 <li>Communication regarding our services</li>
@@ -272,39 +286,69 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="bg-gray-50 px-6 py-3 flex justify-end rounded-b-lg">
+                        <button onclick="closeDialog('privacy-dialog')" 
+                                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </dialog>
 
-                    <!-- Refund Policy -->
-                    <div>
-                        <button onclick="togglePolicy('refund')" class="text-blue-400 hover:text-blue-300">Refund Policy</button>
-                        <div id="refund-policy" class="hidden mt-4 text-left text-sm bg-gray-700 p-4 rounded">
-                            <h4 class="font-bold mb-2">Refund Policy</h4>
-                            <p>We offer refunds under the following conditions:</p>
-                            <ul class="list-disc ml-4 mt-2">
+        <!-- Refund Policy Dialog -->
+        <dialog id="refund-dialog" class="p-0 rounded-lg shadow-xl backdrop:bg-gray-500 backdrop:bg-opacity-50">
+            <div class="w-full max-w-2xl">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4">Refund Policy</h3>
+                        <div class="prose">
+                            <p class="mb-2">We offer refunds under the following conditions:</p>
+                            <ul class="list-disc ml-6 mb-4">
                                 <li>Request made within 7 days of purchase</li>
-                                <li>Service not accessed or used more than 10 times</li>
+                                <li>Service not accessed or used</li>
                                 <li>Technical issues preventing service access</li>
                             </ul>
-                            <p class="mt-2">To request a refund, please contact our support team with your purchase details.</p>
+                            <p>To request a refund, please contact our support team with your purchase details.</p>
                         </div>
                     </div>
+                    <div class="bg-gray-50 px-6 py-3 flex justify-end rounded-b-lg">
+                        <button onclick="closeDialog('refund-dialog')" 
+                                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </dialog>
 
-                    <!-- Terms and Conditions -->
-                    <div>
-                        <button onclick="togglePolicy('terms')" class="text-blue-400 hover:text-blue-300">Terms & Conditions</button>
-                        <div id="terms-conditions" class="hidden mt-4 text-left text-sm bg-gray-700 p-4 rounded">
-                            <h4 class="font-bold mb-2">Terms & Conditions</h4>
-                            <p>By using our service, you agree to:</p>
-                            <ul class="list-disc ml-4 mt-2">
+        <!-- Terms & Conditions Dialog -->
+        <dialog id="terms-dialog" class="p-0 rounded-lg shadow-xl backdrop:bg-gray-500 backdrop:bg-opacity-50">
+            <div class="w-full max-w-2xl">
+                <div class="bg-white rounded-lg shadow">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-4">Terms & Conditions</h3>
+                        <div class="prose">
+                            <p class="mb-2">By using our service, you agree to:</p>
+                            <ul class="list-disc ml-6 mb-4">
                                 <li>Use the service for personal use only</li>
                                 <li>Not share or redistribute analysis reports</li>
                                 <li>Maintain the confidentiality of your account</li>
                                 <li>Accept that investment decisions are your responsibility</li>
                             </ul>
-                            <p class="mt-2">We reserve the right to modify or terminate the service in a week's notice time.</p>
+                            <p>We reserve the right to modify or terminate the service at any time.</p>
                         </div>
+                    </div>
+                    <div class="bg-gray-50 px-6 py-3 flex justify-end rounded-b-lg">
+                        <button onclick="closeDialog('terms-dialog')" 
+                                class="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors">
+                            Close
+                        </button>
                     </div>
                 </div>
             </div>
+        </dialog>
+    </div>
 
             <!-- Copyright -->
             <div class="text-center mt-8 text-sm">
@@ -612,63 +656,34 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAuthState(false);
     }
 });
-
-    document.addEventListener('DOMContentLoaded', function() {
-    // Add click listeners to all policy buttons
-    document.querySelectorAll('[onclick*="togglePolicy"]').forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault(); // Prevent any default button behavior
-            const policyType = this.getAttribute('onclick').match(/\'(.*?)\'/)[1];
-            togglePolicy(policyType);
-        });
-    });
-});
-
-function togglePolicy(policyType) {
-    console.log('Toggle function called for:', policyType);
+    function openDialog(dialogId) {
+                const dialog = document.getElementById(dialogId);
+                if (dialog) {
+                    dialog.showModal();
+                }
+            }
     
-    // Get all policy divs
-    const privacyDiv = document.getElementById('privacy-policy');
-    const refundDiv = document.getElementById('refund-policy');
-    const termsDiv = document.getElementById('terms-conditions');
+            function closeDialog(dialogId) {
+                const dialog = document.getElementById(dialogId);
+                if (dialog) {
+                    dialog.close();
+                }
+            }
     
-    // Debug log to check if elements are found
-    console.log('Found elements:', {
-        privacy: privacyDiv,
-        refund: refundDiv,
-        terms: termsDiv
-    });
-    
-    // Create a mapping of policy types to their elements
-    const policyDivs = {
-        'privacy': privacyDiv,
-        'refund': refundDiv,
-        'terms': termsDiv
-    };
-    
-    // Get the div we want to toggle
-    const divToToggle = policyDivs[policyType];
-    
-    if (!divToToggle) {
-        console.error('Policy div not found for type:', policyType);
-        return;
-    }
-    
-    // Hide all other policy divs
-    Object.values(policyDivs).forEach(div => {
-        if (div && div !== divToToggle) {
-            div.classList.add('hidden');
-            console.log('Hiding:', div.id);
-        }
-    });
-    
-    // Toggle the selected policy div
-    console.log('Toggling visibility for:', divToToggle.id);
-    console.log('Current classes:', divToToggle.className);
-    divToToggle.classList.toggle('hidden');
-    console.log('New classes:', divToToggle.className);
-}
-
+            // Close dialog when clicking outside
+            document.querySelectorAll('dialog').forEach(dialog => {
+                dialog.addEventListener('click', e => {
+                    const dialogDimensions = dialog.getBoundingClientRect();
+                    if (
+                        e.clientX < dialogDimensions.left ||
+                        e.clientX > dialogDimensions.right ||
+                        e.clientY < dialogDimensions.top ||
+                        e.clientY > dialogDimensions.bottom
+                    ) {
+                        dialog.close();
+                    }
+                });
+            });
 
     </script>
 </body>
