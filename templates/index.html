@@ -613,6 +613,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+        function togglePolicy(policyType) {
+    // Get all policy divs
+    const privacyDiv = document.getElementById('privacy-policy');
+    const refundDiv = document.getElementById('refund-policy');
+    const termsDiv = document.getElementById('terms-conditions');
+    
+    // Create a mapping of policy types to their elements
+    const policyDivs = {
+        'privacy': privacyDiv,
+        'refund': refundDiv,
+        'terms': termsDiv
+    };
+    
+    // Get the div we want to toggle
+    const divToToggle = policyDivs[policyType];
+    
+    // Hide all other policy divs
+    Object.values(policyDivs).forEach(div => {
+        if (div !== divToToggle) {
+            div.classList.add('hidden');
+        }
+    });
+    
+    // Toggle the selected policy div
+    if (divToToggle) {
+        divToToggle.classList.toggle('hidden');
+    }
+}
+
 
 
     </script>
