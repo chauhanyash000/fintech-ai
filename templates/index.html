@@ -613,11 +613,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-        function togglePolicy(policyType) {
+    document.addEventListener('DOMContentLoaded', function() {
+    // Add click listeners to all policy buttons
+    document.querySelectorAll('[onclick*="togglePolicy"]').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Prevent any default button behavior
+            const policyType = this.getAttribute('onclick').match(/\'(.*?)\'/)[1];
+            togglePolicy(policyType);
+        });
+    });
+});
+
+function togglePolicy(policyType) {
+    console.log('Toggle function called for:', policyType);
+    
     // Get all policy divs
     const privacyDiv = document.getElementById('privacy-policy');
     const refundDiv = document.getElementById('refund-policy');
     const termsDiv = document.getElementById('terms-conditions');
+    
+    // Debug log to check if elements are found
+    console.log('Found elements:', {
+        privacy: privacyDiv,
+        refund: refundDiv,
+        terms: termsDiv
+    });
     
     // Create a mapping of policy types to their elements
     const policyDivs = {
@@ -629,19 +649,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Get the div we want to toggle
     const divToToggle = policyDivs[policyType];
     
+    if (!divToToggle) {
+        console.error('Policy div not found for type:', policyType);
+        return;
+    }
+    
     // Hide all other policy divs
     Object.values(policyDivs).forEach(div => {
-        if (div !== divToToggle) {
+        if (div && div !== divToToggle) {
             div.classList.add('hidden');
+            console.log('Hiding:', div.id);
         }
     });
     
     // Toggle the selected policy div
-    if (divToToggle) {
-        divToToggle.classList.toggle('hidden');
-    }
+    console.log('Toggling visibility for:', divToToggle.id);
+    console.log('Current classes:', divToToggle.className);
+    divToToggle.classList.toggle('hidden');
+    console.log('New classes:', divToToggle.className);
 }
-
 
 
     </script>
