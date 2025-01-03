@@ -704,34 +704,9 @@ async function downloadReport() {
     }
 }
 
-async function viewSampleReport() {
-    const sampleTicker = 'ADBE';  // Default sample ticker
-    
-    try {
-        // Show loading state
-        const viewButton = document.getElementById('view-sample-button');
-        const originalText = viewButton.textContent;
-        viewButton.textContent = 'Loading...';
-        viewButton.disabled = true;
-
-        // Attempt to fetch the report
-        const response = await fetch(`${BACKEND_URL}/download/${sampleTicker}`);
-        
-        if (response.ok) {
-            // Open in new tab
-            window.open(`${BACKEND_URL}/download/${sampleTicker}`, '_blank');
-        } else {
-            throw new Error('Failed to fetch sample report');
-        }
-    } catch (error) {
-        console.error('Error viewing sample report:', error);
-        alert('Failed to load sample report. Please try again later.');
-    } finally {
-        // Reset button state
-        const viewButton = document.getElementById('view-sample-button');
-        viewButton.textContent = 'View Report (Sample)';
-        viewButton.disabled = false;
-    }
+function viewSampleReport() {
+    const reportUrl = 'https://stockanalysish-735704923712.us-central1.run.app/download/ADBE';
+    window.open(reportUrl, '_blank');
 }
 
 // Replace the existing anchor tag with a button
