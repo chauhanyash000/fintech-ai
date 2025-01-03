@@ -157,12 +157,6 @@
                     </div>
                 </div>
                 
-                <a href="https://stockanalysish-735704923712.us-central1.run.app/download/ADBE" 
-                   class="inline-block mt-4 text-blue-500 hover:text-blue-600 underline"
-                   target="_blank">
-                    View Report (Sample)
-                </a>
-            </div>
             
             <form id="reportForm" class="space-y-6">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -247,12 +241,15 @@
             <p class="text-sm text-gray-600 mt-1">Clear, organized, and actionable investment insights delivered in a professional format</p>
         </div>
     </div>
-                <a href="https://stockanalysish-735704923712.us-central1.run.app/download/ADBE" 
-                   class="inline-block mt-4 text-blue-500 hover:text-blue-600 underline"
-                   target="_blank">
-                    View Report (Sample)
-                </a>
-            </div>
+
+       <button 
+    id="view-sample-button"
+    onclick="viewSampleReport()"
+    class="inline-block mt-4 text-blue-500 hover:text-blue-600 underline">
+    View Report (Sample)
+</button>
+
+
 
     <!-- Bottom Note -->
     <p class="text-xs text-gray-500 italic text-center mt-6">
@@ -704,6 +701,52 @@ async function downloadReport() {
         alert('Download failed: ' + error.message);
     }
 }
+
+async function viewSampleReport() {
+    const sampleTicker = 'ADBE';  // Default sample ticker
+    const backendUrl = 'https://stockanalysish-735704923712.us-central1.run.app';
+    
+    try {
+        // Show loading state
+        const viewButton = document.getElementById('view-sample-button');
+        const originalText = viewButton.textContent;
+        viewButton.textContent = 'Loading...';
+        viewButton.disabled = true;
+
+        // Attempt to fetch the report
+        const response = await fetch(`${backendUrl}/download/${sampleTicker}`);
+        
+        if (response.ok) {
+            // Open in new tab
+            window.open(`${backendUrl}/download/${sampleTicker}`, '_blank');
+        } else {
+            throw new Error('Failed to fetch sample report');
+        }
+    } catch (error) {
+        console.error('Error viewing sample report:', error);
+        alert('Failed to load sample report. Please try again later.');
+    } finally {
+        // Reset button state
+        const viewButton = document.getElementById('view-sample-button');
+        viewButton.textContent = 'View Report (Sample)';
+        viewButton.disabled = false;
+    }
+}
+
+// Replace the existing anchor tag with a button
+document.addEventListener('DOMContentLoaded', () => {
+    const sampleReportLink = document.createElement('button');
+    sampleReportLink.id = 'view-sample-button';
+    sampleReportLink.className = 'inline-block mt-4 text-blue-500 hover:text-blue-600 underline';
+    sampleReportLink.textContent = 'View Report (Sample)';
+    sampleReportLink.onclick = viewSampleReport;
+
+    // Find the existing anchor tag and replace it
+    const existingLink = document.querySelector('a[href*="/download/ADBE"]');
+    if (existingLink) {
+        existingLink.parentNode.replaceChild(sampleReportLink, existingLink);
+    }
+});
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
