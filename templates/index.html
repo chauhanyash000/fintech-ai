@@ -245,7 +245,9 @@
        <button 
     id="view-sample-button"
     onclick="viewSampleReport()"
-    class="inline-block mt-4 text-blue-500 hover:text-blue-600 underline">
+    class="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 
+    focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+    transition duration-150 ease-in-out flex items-center justify-center">
     View Report (Sample)
 </button>
 
@@ -704,7 +706,6 @@ async function downloadReport() {
 
 async function viewSampleReport() {
     const sampleTicker = 'ADBE';  // Default sample ticker
-    const backendUrl = 'https://stockanalysish-735704923712.us-central1.run.app';
     
     try {
         // Show loading state
@@ -714,11 +715,11 @@ async function viewSampleReport() {
         viewButton.disabled = true;
 
         // Attempt to fetch the report
-        const response = await fetch(`${backendUrl}/download/${sampleTicker}`);
+        const response = await fetch(`${BACKEND_URL}/download/${sampleTicker}`);
         
         if (response.ok) {
             // Open in new tab
-            window.open(`${backendUrl}/download/${sampleTicker}`, '_blank');
+            window.open(`${BACKEND_URL}/download/${sampleTicker}`, '_blank');
         } else {
             throw new Error('Failed to fetch sample report');
         }
